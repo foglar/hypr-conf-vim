@@ -15,6 +15,50 @@ A Nix flake providing a [Home Manager](https://github.com/nix-community/home-man
 - 🔧 **Modular**: Enable/disable components as needed
 - ✅ **Tested**: GitHub Actions workflow ensures the module builds correctly
 
+## Architecture
+
+The module is structured as follows:
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    Your NixOS/Home Manager Config            │
+│                                                               │
+│  programs.hyprland-vim-styled.enable = true;                │
+└───────────────────────┬─────────────────────────────────────┘
+                        │
+                        │ imports
+                        │
+┌───────────────────────▼─────────────────────────────────────┐
+│              hypr-conf-vim Nix Module (module.nix)           │
+│                                                               │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │ Configuration Options                                 │   │
+│  │ • enableAgs, enableNvim, enableKitty, enableCava     │   │
+│  │ • wallpaperDir, extraPackages                        │   │
+│  └──────────────────────────────────────────────────────┘   │
+│                                                               │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │ Package Installation                                  │   │
+│  │ • Hyprland, kitty, neovim, ags, cava                 │   │
+│  │ • System utilities, fonts, wallpaper tools           │   │
+│  └──────────────────────────────────────────────────────┘   │
+│                                                               │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │ Configuration Files Deployment                        │   │
+│  │ • ~/.config/hypr/* (Hyprland configs)                │   │
+│  │ • ~/.config/ags/* (AGS widgets)                      │   │
+│  │ • ~/.config/nvim/* (Neovim config)                   │   │
+│  │ • ~/.config/kitty/* (Terminal config)                │   │
+│  │ • ~/.config/swww/* (Wallpapers)                      │   │
+│  └──────────────────────────────────────────────────────┘   │
+│                                                               │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │ Source Files (vim_styled/)                            │   │
+│  │ • Original configuration from qxb3/gruvbox.hypr      │   │
+│  └──────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────┘
+```
+
 ## Quick Start
 
 ### Using Flakes
