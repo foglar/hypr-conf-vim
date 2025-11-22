@@ -1,5 +1,8 @@
 # Vim Styled Hyprland Configuration - Nix Module
 
+[![Test Nix Module](https://github.com/foglar/hypr-conf-vim/actions/workflows/test.yaml/badge.svg)](https://github.com/foglar/hypr-conf-vim/actions/workflows/test.yaml)
+[![License](https://img.shields.io/github/license/foglar/hypr-conf-vim)](LICENSE)
+
 A Nix flake providing a [Home Manager](https://github.com/nix-community/home-manager) module for the beautiful vim_styled Hyprland configuration originally from [qxb3/gruvbox.hypr](https://github.com/qxb3/gruvbox.hypr).
 
 ![Vim Styled Preview](https://raw.githubusercontent.com/qxb3/gruvbox.hypr/vim_styled/repo/1.png)
