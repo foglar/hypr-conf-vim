@@ -61,13 +61,19 @@
 <details open>
   <summary>
     <h2>
-      <a href="https://github.com/qxb3/conf/tree/vim_styled">Vim</a>
+      <a href="https://github.com/qxb3/conf/tree/vim_styled">Vim</a> - 🎉 <a href="./NIX_README.md">Now Available as Nix Module!</a>
     </h2>
   </summary>
 
   <img align="center" width="100%" src="https://raw.githubusercontent.com/qxb3/gruvbox.hypr/vim_styled/repo/1.png" />
   <br><br>
   <img align="center" width="100%" src="https://raw.githubusercontent.com/qxb3/gruvbox.hypr/vim_styled/repo/5.png" />
+  
+  <br><br>
+  <p align="center">
+    <b>✨ The vim_styled configuration is now available as a Nix flake! ✨</b><br>
+    See <a href="./NIX_README.md">NIX_README.md</a> for installation instructions.
+  </p>
 </details>
 
 <details open>
@@ -120,6 +126,27 @@
   <img align="center" width="100%" src="https://raw.githubusercontent.com/qxb3/gruvbox.hypr/focused/repo/1.png" />
 </details>
 
+# Nix Module for Vim Styled Configuration
+
+This repository now includes a **Nix flake** and **Home Manager module** for the vim_styled Hyprland configuration!
+
+📚 **Documentation:**
+- [NIX_README.md](./NIX_README.md) - Complete documentation for the Nix module
+- [QUICKSTART.md](./QUICKSTART.md) - Quick start guide to get up and running
+- [example-flake.nix](./example-flake.nix) - Example configuration file
+
+🚀 **Quick Install:**
+```nix
+{
+  inputs.hypr-conf-vim.url = "github:foglar/hypr-conf-vim";
+  
+  # In your home-manager configuration:
+  programs.hyprland-vim-styled.enable = true;
+}
+```
+
 # Contribution
 
 Feel free to fork and make a pr :D
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for contribution guidelines.

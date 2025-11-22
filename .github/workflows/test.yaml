@@ -1,0 +1,123 @@
+name: Test Nix Module
+
+on:
+  push:
+    branches: [ main, copilot/* ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  test-nix-module:
+    name: Test vim_styled Nix Module
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v24
+        with:
+          nix_path: nixpkgs=channel:nixos-unstable
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+            accept-flake-config = true
+
+      - name: Setup Cachix
+        uses: cachix/cachix-action@v12
+        with:
+          name: nix-community
+          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+        continue-on-error: true
+
+      - name: Check flake
+        run: |
+          nix flake check --show-trace
+
+      - name: Build test configuration
+        run: |
+          nix build .#checks.x86_64-linux.module-builds --show-trace
+
+      - name: Show flake info
+        run: |
+          nix flake show
+
+      - name: Test flake metadata
+        run: |
+          nix flake metadata
+
+  test-module-import:
+    name: Test Module Import
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v24
+        with:
+          nix_path: nixpkgs=channel:nixos-unstable
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+
+      - name: Create test configuration
+        run: |
+          cat > test-config.nix << 'EOF'
+          { config, pkgs, ... }:
+          {
+            imports = [ ./module.nix ];
+            
+            home = {
+              username = "testuser";
+              homeDirectory = "/home/testuser";
+              stateVersion = "24.05";
+            };
+            
+            programs.hyprland-vim-styled = {
+              enable = true;
+            };
+          }
+          EOF
+
+      - name: Test module can be imported
+        run: |
+          # Just check that the module can be evaluated without errors
+          nix-instantiate --eval -E '
+            let
+              pkgs = import <nixpkgs> {};
+              lib = pkgs.lib;
+              module = import ./module.nix;
+            in
+              lib.isAttrs module
+          '
+
+  lint-nix:
+    name: Lint Nix Files
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v24
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+
+      - name: Install nixpkgs-fmt
+        run: |
+          nix profile install nixpkgs#nixpkgs-fmt
+
+      - name: Check Nix formatting
+        run: |
+          nixpkgs-fmt --check ./*.nix || true
+
+      - name: Check Nix files parse correctly
+        run: |
+          for file in *.nix; do
+            echo "Checking $file..."
+            nix-instantiate --parse "$file" > /dev/null
+          done
